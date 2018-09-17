@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="一华一世界">
-<meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://yoursite.com/categories/index.html">
+<meta name="description" content="Chap1 Unix基础知识1.5 输入与输出文件描述符(fd) – 用以标识一个特定的进程正在访问的文件。当内核打开1个现有文件或创建一个新文件，它都返回一个文件描述符。在读写文件时，都可以使用这个fd.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Longneicool">
+<meta property="og:url" content="http://yoursite.com/2018/09/18/UEAP/index.html">
 <meta property="og:site_name" content="Longneicool">
-<meta property="og:description" content="一华一世界">
+<meta property="og:description" content="Chap1 Unix基础知识1.5 输入与输出文件描述符(fd) – 用以标识一个特定的进程正在访问的文件。当内核打开1个现有文件或创建一个新文件，它都返回一个文件描述符。在读写文件时，都可以使用这个fd.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-15T15:27:14.988Z">
+<meta property="og:updated_time" content="2018-09-17T23:29:53.212Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="categories">
-<meta name="twitter:description" content="一华一世界">
+<meta name="twitter:title" content="Longneicool">
+<meta name="twitter:description" content="Chap1 Unix基础知识1.5 输入与输出文件描述符(fd) – 用以标识一个特定的进程正在访问的文件。当内核打开1个现有文件或创建一个新文件，它都返回一个文件描述符。在读写文件时，都可以使用这个fd.">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/categories/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/18/UEAP/"/>
 
 
 
 
 
-  <title>categories | Longneicool</title>
+  <title> | Longneicool</title>
   
 
 
@@ -284,33 +284,133 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/18/UEAP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Longneicool">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Longneicool">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">categories</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-18T07:30:04+08:00">
+                2018-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-      </div>
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+              <span class="post-meta-divider">|</span>
+              <span id="busuanzi_value_page_pv"></span>次阅读
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h3 id="Chap1-Unix基础知识"><a href="#Chap1-Unix基础知识" class="headerlink" title="Chap1 Unix基础知识"></a>Chap1 Unix基础知识</h3><h4 id="1-5-输入与输出"><a href="#1-5-输入与输出" class="headerlink" title="1.5 输入与输出"></a>1.5 输入与输出</h4><p>文件描述符(fd) – 用以标识一个特定的进程正在访问的文件。当内核打开1个现有文件或创建一个新文件，它都返回一个文件描述符。在读写文件时，都可以使用这个fd.<br><a id="more"></a><br>每当允许一个新程序，所有的shell都为其打开3个fd: standard input,  standard output, standard error.<br>函数open, read, write, lseek, close 提供了不带缓冲的IO. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;apue.h&quot;</span><br><span class="line">#include &quot;mysys.h&quot;</span><br><span class="line"></span><br><span class="line">#define BUFFSIZE 4096</span><br><span class="line"></span><br><span class="line">int main(void)</span><br><span class="line">&#123;</span><br><span class="line">	int n;</span><br><span class="line">	char buf[BUFFSIZE];</span><br><span class="line"></span><br><span class="line">	while((n = read(STDIN_FILENO, buf, BUFFSIZE)) &gt; 0)</span><br><span class="line">	&#123;</span><br><span class="line">		if(write(STDOUT_FILENO, buf, n) != n)</span><br><span class="line">		&#123;</span><br><span class="line">			err_sys(&quot;Write error&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if (n &lt; 0)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(&quot;read error&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述code都是定义在&lt;unistd.h&gt;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/* Standard file descriptors.  */</span><br><span class="line"> #define STDIN_FILENO    0   /* Standard input.  */</span><br><span class="line"> #define STDOUT_FILENO   1   /* Standard output.  */</span><br><span class="line"> #define STDERR_FILENO   2   /* Standard error output.  */</span><br><span class="line"> </span><br><span class="line"> /* Read NBYTES into BUF from FD.  Return the</span><br><span class="line">   number read, -1 for errors or 0 for EOF.</span><br><span class="line"></span><br><span class="line">   This function is a cancellation point and therefore not marked with</span><br><span class="line">   __THROW.  */</span><br><span class="line">extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __wur;</span><br><span class="line"></span><br><span class="line">/* Write N bytes of BUF to FD.  Return the number written, or -1.</span><br><span class="line"></span><br><span class="line">   This function is a cancellation point and therefore not marked with</span><br><span class="line">   __THROW.  */</span><br><span class="line">extern ssize_t write (int __fd, const void *__buf, size_t __n) __wur;</span><br></pre></td></tr></table></figure></p>
+<p>注意<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./a.out &lt; infile &gt; outfile // 会将infile内容复制到outfile</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>标准I/O  – 带缓冲的IO</li>
+</ul>
+<h4 id="1-6-程序和进程"><a href="#1-6-程序和进程" class="headerlink" title="1.6 程序和进程"></a>1.6 程序和进程</h4>
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -348,8 +448,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -391,6 +500,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Chap1-Unix基础知识"><span class="nav-text">Chap1 Unix基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-输入与输出"><span class="nav-text">1.5 输入与输出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-程序和进程"><span class="nav-text">1.6 程序和进程</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

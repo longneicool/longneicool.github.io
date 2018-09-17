@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
+  <entry>
+    <title></title>
+    <url>%2F2018%2F09%2F18%2FUEAP%2F</url>
+    <content type="text"><![CDATA[Chap1 Unix基础知识1.5 输入与输出文件描述符(fd) – 用以标识一个特定的进程正在访问的文件。当内核打开1个现有文件或创建一个新文件，它都返回一个文件描述符。在读写文件时，都可以使用这个fd.每当允许一个新程序，所有的shell都为其打开3个fd: standard input, standard output, standard error.函数open, read, write, lseek, close 提供了不带缓冲的IO. 1234567891011121314151617181920212223#include &quot;apue.h&quot;#include &quot;mysys.h&quot;#define BUFFSIZE 4096int main(void)&#123; int n; char buf[BUFFSIZE]; while((n = read(STDIN_FILENO, buf, BUFFSIZE)) &gt; 0) &#123; if(write(STDOUT_FILENO, buf, n) != n) &#123; err_sys(&quot;Write error&quot;); &#125; &#125; if (n &lt; 0) &#123; err_sys(&quot;read error&quot;); &#125;&#125; 上述code都是定义在&lt;unistd.h&gt;1234567891011121314151617/* Standard file descriptors. */ #define STDIN_FILENO 0 /* Standard input. */ #define STDOUT_FILENO 1 /* Standard output. */ #define STDERR_FILENO 2 /* Standard error output. */ /* Read NBYTES into BUF from FD. Return the number read, -1 for errors or 0 for EOF. This function is a cancellation point and therefore not marked with __THROW. */extern ssize_t read (int __fd, void *__buf, size_t __nbytes) __wur;/* Write N bytes of BUF to FD. Return the number written, or -1. This function is a cancellation point and therefore not marked with __THROW. */extern ssize_t write (int __fd, const void *__buf, size_t __n) __wur; 注意1./a.out &lt; infile &gt; outfile // 会将infile内容复制到outfile 标准I/O – 带缓冲的IO 1.6 程序和进程]]></content>
+  </entry>
 </search>
