@@ -87,10 +87,14 @@
 <meta property="og:site_name" content="Longneicool">
 <meta property="og:description" content="Chap1 Unix基础知识1.5 输入与输出文件描述符(fd) – 用以标识一个特定的进程正在访问的文件。当内核打开1个现有文件或创建一个新文件，它都返回一个文件描述符。在读写文件时，都可以使用这个fd.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-18T14:51:23.141Z">
+<meta property="og:image" content="https://github.com/longneicool/images/blob/master/Kernel_data_structures.png?raw=true">
+<meta property="og:image" content="https://github.com/longneicool/images/blob/master/Two_independent_processes_with_the_same_file_open.png?raw=true">
+<meta property="og:image" content="https://github.com/longneicool/images/blob/master/multi_file_descriptor_entry_points_to_one_file_table_entry.png?raw=true">
+<meta property="og:updated_time" content="2018-09-24T07:11:32.722Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="UEAP">
 <meta name="twitter:description" content="Chap1 Unix基础知识1.5 输入与输出文件描述符(fd) – 用以标识一个特定的进程正在访问的文件。当内核打开1个现有文件或创建一个新文件，它都返回一个文件描述符。在读写文件时，都可以使用这个fd.">
+<meta name="twitter:image" content="https://github.com/longneicool/images/blob/master/Kernel_data_structures.png?raw=true">
 
 
 
@@ -383,6 +387,63 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;string.h&gt;</span><br><span class="line">char* strerror(int errnum);</span><br><span class="line"></span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">void perror(const char* msg); // 输出为 msg + errno对应的错误string</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;apue.h&quot;</span><br><span class="line">#include &lt;errno.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char** argv)</span><br><span class="line">&#123;</span><br><span class="line">	fprintf(stderr, &quot;EACCES: %s\n&quot;, strerror(EACCES));</span><br><span class="line">	errno = ENOENT;</span><br><span class="line"></span><br><span class="line">	perror(argv[0]);</span><br><span class="line">	exit(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>The error numbers are defined in errno-base.h<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#define	EPERM		 1	/* Operation not permitted */</span><br><span class="line">#define	ENOENT		 2	/* No such file or directory */</span><br><span class="line">#define	ESRCH		 3	/* No such process */</span><br><span class="line">#define	EINTR		 4	/* Interrupted system call */</span><br><span class="line">#define	EIO		 5	/* I/O error */</span><br><span class="line">#define	ENXIO		 6	/* No such device or address */</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<h3 id="Chap3-File-I-O"><a href="#Chap3-File-I-O" class="headerlink" title="Chap3 File I/O"></a>Chap3 File I/O</h3><h4 id="3-2-File-Descriptors"><a href="#3-2-File-Descriptors" class="headerlink" title="3.2 File Descriptors"></a>3.2 File Descriptors</h4><p>To bthe kernel, all open files are referred to by file descriptors.<br>When we create or open a file, the kernel returns a file descriptor to the process which is used to read/write the file<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd&gt;</span><br><span class="line">#define STDIN_FILENO 0</span><br><span class="line">#define STDOUT_FILENO 1</span><br><span class="line">#define STDERR_FILENO 2</span><br></pre></td></tr></table></figure></p>
+<h4 id="3-3-open-and-openat-Functions"><a href="#3-3-open-and-openat-Functions" class="headerlink" title="3.3 open and openat Functions"></a>3.3 open and openat Functions</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line"></span><br><span class="line">int open(const char* filepath, int a flag, .../* mode_t mode */);</span><br><span class="line">int open(int fd, const char* filepath, int a flag, .../* mode_t mode */);</span><br></pre></td></tr></table></figure>
+<p>The file descriptor returned by open and openat is guaranteed to be the lowest-numbered usunsed descriptor.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;apue.h&quot;</span><br><span class="line">#include &quot;mysys.h&quot;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line"></span><br><span class="line">int main(void)</span><br><span class="line">&#123;</span><br><span class="line">    // create a new file1. </span><br><span class="line">	int fd = open(&quot;file1&quot;, O_RDONLY | O_WRONLY | O_CREAT | O_TRUNC, FILE_MODE);</span><br><span class="line">	if(fd == -1)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(&quot;open failed&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	printf(&quot;fd of file1 is %d&quot;, fd);</span><br><span class="line"></span><br><span class="line">    // Get the fd of dir Debug</span><br><span class="line">	int dirFd = open(&quot;Debug&quot;, O_DIRECTORY, DIR_MODE);</span><br><span class="line">	if(dirFd == -1)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(&quot;open dir failed&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	printf(&quot;dirFD: %d&quot;, dirFd);</span><br><span class="line"></span><br><span class="line">    // create a new file file2 in Debug/</span><br><span class="line">	int fd2 = openat(dirFd, &quot;file2&quot;, O_RDONLY | O_WRONLY | O_CREAT | O_TRUNC, FILE_MODE);</span><br><span class="line">	if(fd2 == -1)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(&quot;open file2 failed&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	exit(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">// equivalent to open(path, O_WRONLY | O_CREAT | O_TRUNC, mode);</span><br><span class="line">int creat(const char* path, mode_t mode);</span><br></pre></td></tr></table></figure>
+<p>Note:<br>通过creat创建的file，只能写(O_WRONLY). 如果想实现写的话，需要creat-&gt;close-&gt;open. 或者是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open(path, O_RDONLY | O_WRONLY | O_CREAT | O_TRUNC, mode);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">int close(int fd);</span><br></pre></td></tr></table></figure>
+<p>Note: All of its open files are closed automatically by the kernel when a process terminates.</p>
+<h4 id="3-6-lseek-Function"><a href="#3-6-lseek-Function" class="headerlink" title="3.6 lseek Function"></a>3.6 lseek Function</h4><p>每个open的文件都有一个 <em>current file offset</em> , 文件读写都是从这个offset开始的，并且offset会增加the number of bytes read or written.<br>lseek就是来调整这个<em>current file offset</em>的。注意lseek只是调整offset, 不会导致any I/O operation.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">off_t lseek(int fd, off_t offset, int whence); // return the new offset if OK, -1 on error</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># define SEEK_SET	0	/* Seek from beginning of file.  */</span><br><span class="line"># define SEEK_CUR	1	/* Seek from current position.  */</span><br><span class="line"># define SEEK_END	2	/* Seek from end of file.  */</span><br></pre></td></tr></table></figure>
+<p>How to get the current offset:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">off_t curPos;</span><br><span class="line">curPos = lseek(fd, 0, SEEK_CUR);</span><br></pre></td></tr></table></figure></p>
+<p>也可以将offset设置到文件的end后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;apue.h&quot;</span><br><span class="line">#include &quot;mysys.h&quot;</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line"></span><br><span class="line">char buf1[] = &quot;abcdefg&quot;;</span><br><span class="line">char buf2[] = &quot;ABCDEFG&quot;;</span><br><span class="line"></span><br><span class="line">int main(void)</span><br><span class="line">&#123;</span><br><span class="line">	int fd;</span><br><span class="line"></span><br><span class="line">	if((fd = creat(&quot;file.hole&quot;, FILE_MODE)) &lt; 0)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(&quot;creat error&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if(write(fd, buf1, 7) != 7)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(&quot;buf1 write error&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if(lseek(fd, 16384, SEEK_SET) == -1)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(&quot;seek error&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if(write(fd, buf2, 7) != 7)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(&quot;buf2 write error&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	off_t curPos = lseek(fd, 0, SEEK_CUR);</span><br><span class="line">	if(curPos == -1)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(&quot;seek cur pos error&quot;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	printf(&quot;%d\n&quot;, curPos);</span><br><span class="line"></span><br><span class="line">	exit(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>file.hole的内容是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dylanz@vbox:~/study/ueap$ od -c file.hole </span><br><span class="line">0000000   a   b   c   d   e   f   g  \0  \0  \0  \0  \0  \0  \0  \0  \0</span><br><span class="line">0000020  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0  \0</span><br><span class="line">*</span><br><span class="line">0040000   A   B   C   D   E   F   G</span><br><span class="line">0040007</span><br></pre></td></tr></table></figure></p>
+<h4 id="read-write-Function"><a href="#read-write-Function" class="headerlink" title="read/write Function"></a>read/write Function</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">// return number of bytes read; 0 if end of file; -1 on error</span><br><span class="line">ssize_t read(int fd, void *buf, size_t nbytes);</span><br></pre></td></tr></table></figure>
+<h4 id="3-10-File-Sharing"><a href="#3-10-File-Sharing" class="headerlink" title="3.10 File Sharing"></a>3.10 File Sharing</h4><p><img src="https://github.com/longneicool/images/blob/master/Kernel_data_structures.png?raw=true" alt="Kernel_data_structures"></p>
+<p>如上图，包含3个部分：</p>
+<ol>
+<li>process table entry<br>这个是per process的，其中包括了在这个process上打开文件的fd. Associated with each fd are: <ol>
+<li>The file descriptor flags.</li>
+<li>a pointer to a file table entry.</li>
+</ol>
+</li>
+<li><p>file table entry<br>这个不是per process的。对于被不同process打开的同一文件，会有多个file table entry.<br>其中包含了file status flag and current file offset，都是用于操作文件的。</p>
+</li>
+<li><p>Vnode table entry<br>这个是真正的per file的，包含the type of the file and <strong>pointers to the functions that operate on the file</strong>. 此外，大多数files还包括inode info.</p>
+</li>
+</ol>
+<p>下面是2个processes打开同一文件的示意图:<br><img src="https://github.com/longneicool/images/blob/master/Two_independent_processes_with_the_same_file_open.png?raw=true" alt="Two processes open one file"></p>
+<p>注意每个process都有自己的file table entry，其实这也是可以理解的，因为file table entry中包括的是flags and offset 对与每个process很可能是不同的。<br>当进行如下操作时：</p>
+<ul>
+<li>write <ul>
+<li>current file offset in file table entry会增加the number of written bytes. </li>
+<li>如果current file offset &gt; current file size in i-node, current file size也会更新为current file offset. </li>
+</ul>
+</li>
+<li>write with O_APPEND.<br>在每次写之前，都会将current file offset in file table entry 设置为current file size in i_node. 这样就会force every write to be appended to the current end of file. </li>
+<li>lseek<br>lseek 只会修改current file offset in file table entry , 不会改v-node中的内容。</li>
+</ul>
+<p><strong>请注意下面的描述，不是很明白</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">It is possible for more than one ﬁle descriptor entry to point to the same ﬁle table</span><br><span class="line">entry, as we’ll see when we discuss the dup function in Section 3.12. This also happens</span><br><span class="line">after a fork when the parent and the child share the same ﬁle table entry for each open</span><br><span class="line">descriptor (Section 8.3).</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://github.com/longneicool/images/blob/master/multi_file_descriptor_entry_points_to_one_file_table_entry.png?raw=true" alt=""></p>
+<p><strong>Note</strong>: The difference between the file descriptor flags and file status flag</p>
+<ul>
+<li>File descriptor flags(in file descriptor entry): Apply to a single descriptor in a single process. </li>
+<li>file status flag(in file table entry): Apply to all descriptors in any process that point to the given file table entry.</li>
+</ul>
+<h4 id="3-11-Atomic-Operations"><a href="#3-11-Atomic-Operations" class="headerlink" title="3.11 Atomic Operations"></a>3.11 Atomic Operations</h4><ul>
+<li>Appending to a File</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">if(lseek(fd, 0L, 2) &lt; 0)</span><br><span class="line">&#123;</span><br><span class="line">    err_sys(&quot;lseek error&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(write(fd, buf. 100) != 100)</span><br><span class="line">&#123;</span><br><span class="line">	err_sys(&quot;write error&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上code， 如果有2个process同时Appending to a file, 就会发生冲突.<br>1) process A, B 同时对file通过如上code进行append操作。此时会产生2个file table entry.<br>2) In process A, lseek 将current file offset设置到file end. 例如到1500<br>3) In process B, lseek 将current file offset设置到file end, 为1500<br>4）In process B, write 100个byte，此时current file offset and current file size 均为1600.<br>5）In process A, 开始write，但是此时current file offset为1500, overwrite 了B写的内容。</p>
+<p>此外，UNIX system provides an atomic way to do this operation if we set the O_APPEND flag when a file is opened.</p>
+<ul>
+<li><p>pread and pwrite Functions<br>pread = lseek + read<br>pwrite = lseek + write</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/* Read NBYTES into BUF from FD at the given position OFFSET without</span><br><span class="line">   changing the file pointer.  Return the number read, -1 for errors</span><br><span class="line">   or 0 for EOF.</span><br><span class="line"></span><br><span class="line">   This function is a cancellation point and therefore not marked with</span><br><span class="line">   __THROW.  */</span><br><span class="line">extern ssize_t pread (int __fd, void *__buf, size_t __nbytes,</span><br><span class="line">		      __off_t __offset) __wur;</span><br><span class="line"></span><br><span class="line">/* Write N bytes of BUF to FD at the given position OFFSET without</span><br><span class="line">   changing the file pointer.  Return the number written, or -1.</span><br><span class="line"></span><br><span class="line">   This function is a cancellation point and therefore not marked with</span><br><span class="line">   __THROW.  */</span><br><span class="line">extern ssize_t pwrite (int __fd, const void *__buf, size_t __n,</span><br><span class="line">		       __off_t __offset) __wur;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Creating a File</p>
+</li>
+</ul>
 
       
     </div>
@@ -409,6 +470,22 @@
       
       
 
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/29/chap7-process/" rel="prev" title="Chap7 进程环境">
+                Chap7 进程环境 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
       
 
       
@@ -487,7 +564,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -500,7 +577,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -533,7 +610,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Chap1-Unix基础知识"><span class="nav-text">Chap1 Unix基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-输入与输出"><span class="nav-text">1.5 输入与输出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-程序和进程"><span class="nav-text">1.6 程序和进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-7-出错处理"><span class="nav-text">1.7 出错处理</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Chap1-Unix基础知识"><span class="nav-text">Chap1 Unix基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-输入与输出"><span class="nav-text">1.5 输入与输出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-程序和进程"><span class="nav-text">1.6 程序和进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-7-出错处理"><span class="nav-text">1.7 出错处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Chap3-File-I-O"><span class="nav-text">Chap3 File I/O</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-File-Descriptors"><span class="nav-text">3.2 File Descriptors</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-open-and-openat-Functions"><span class="nav-text">3.3 open and openat Functions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-6-lseek-Function"><span class="nav-text">3.6 lseek Function</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#read-write-Function"><span class="nav-text">read/write Function</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-10-File-Sharing"><span class="nav-text">3.10 File Sharing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-11-Atomic-Operations"><span class="nav-text">3.11 Atomic Operations</span></a></li></ol></li></ol></div>
             
 
           </div>
