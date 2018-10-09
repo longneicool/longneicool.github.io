@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="APUE," />
 
 
 
@@ -79,17 +79,20 @@
 
 
 
-<meta name="description" content="一华一世界">
-<meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://yoursite.com/tags/index.html">
+<meta name="description" content="12345#include &amp;lt;unistd.h&amp;gt;/* Clone the calling process, creating an exact copy.   Return -1 for errors, 0 to the new process,   and the process ID of the new process to the old process.  */int for">
+<meta name="keywords" content="APUE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程控制">
+<meta property="og:url" content="http://yoursite.com/2018/10/09/进程控制/index.html">
 <meta property="og:site_name" content="Longneicool">
-<meta property="og:description" content="一华一世界">
+<meta property="og:description" content="12345#include &amp;lt;unistd.h&amp;gt;/* Clone the calling process, creating an exact copy.   Return -1 for errors, 0 to the new process,   and the process ID of the new process to the old process.  */int for">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-14T04:32:22.156Z">
+<meta property="og:image" content="https://github.com/longneicool/images/blob/master/Snipaste_2018-10-09_22-43-25.jpg?raw=true">
+<meta property="og:updated_time" content="2018-10-09T14:51:08.427Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tags">
-<meta name="twitter:description" content="一华一世界">
+<meta name="twitter:title" content="进程控制">
+<meta name="twitter:description" content="12345#include &amp;lt;unistd.h&amp;gt;/* Clone the calling process, creating an exact copy.   Return -1 for errors, 0 to the new process,   and the process ID of the new process to the old process.  */int for">
+<meta name="twitter:image" content="https://github.com/longneicool/images/blob/master/Snipaste_2018-10-09_22-43-25.jpg?raw=true">
 
 
 
@@ -119,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/09/进程控制/"/>
 
 
 
 
 
-  <title>tags | Longneicool</title>
+  <title>进程控制 | Longneicool</title>
   
 
 
@@ -284,40 +287,182 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/09/进程控制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Longneicool">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Longneicool">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">tags</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-                目前共计 3 个标签
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/APUE/" style="font-size: 12px; color: #ccc">APUE</a> <a href="/tags/Linux-UEAP/" style="font-size: 12px; color: #ccc">Linux UEAP</a> <a href="/tags/apue/" style="font-size: 12px; color: #ccc">apue</a>
-            </div>
-          </div>
+          <h1 class="post-title" itemprop="name headline">进程控制</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-09T21:18:24+08:00">
+                2018-10-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+              <span class="post-meta-divider">|</span>
+              <span id="busuanzi_value_page_pv"></span>次阅读
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="comment">/* Clone the calling process, creating an exact copy.</span></span><br><span class="line"><span class="comment">   Return -1 for errors, 0 to the new process,</span></span><br><span class="line"><span class="comment">   and the process ID of the new process to the old process.  */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fork</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>fork是基于当前的process new1个新的process。fork分别再child process and parent process被调用1次。<br>在child process中，fork返回0。在parent process中，fork返回child process的pid。<br>child process 和 parent process继续执行fork之后的code，child process会获得parent process的数据空间，堆，栈的<strong>副本</strong>。</p>
+<ul>
+<li>堆，栈，数据空间的副本</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mysys.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> globvar = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">char</span> buf[] = <span class="string">"a write to stdcout\n"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> var = <span class="number">80</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(write(STDOUT_FILENO, buf, <span class="keyword">sizeof</span>(buf) - <span class="number">1</span>) != <span class="keyword">sizeof</span>(buf) - <span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(<span class="string">"write error"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"before fork\n"</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">pid_t</span> pid;</span><br><span class="line">	pid = fork();</span><br><span class="line">	<span class="keyword">if</span>(pid &lt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(<span class="string">"fork failed"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(pid == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"In Child process"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">		globvar++;</span><br><span class="line">		var = <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"In Parent process"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">		sleep(<span class="number">2</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"pid=%d, glob=%d, var=%d\n"</span>, (<span class="keyword">long</span>)getpid(), globvar, var);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果执行 <code>./a.out</code>, 输出为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a write to stdcout</span><br><span class="line">before fork</span><br><span class="line">In Parent process</span><br><span class="line">In Child process</span><br><span class="line">pid=3075, glob=7, var=1</span><br><span class="line">pid=3074, glob=6, var=80</span><br></pre></td></tr></table></figure>
+<p>其中3075是child process, 3074为parent process，从上可以看出这两个process的glob 和 var不同，glob是在data段，var在栈中。<br>再次验证了<strong>child process 和parent process拥有不同的堆栈数据空间等等</strong></p>
+<ul>
+<li>缓冲区的副本<br>对以上的程序，如果执行<code>./a.out &gt; temp</code>, 则输出为<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dylanz@vbox:~/study/ueap$ ./a.out &gt; temp.out </span><br><span class="line">dylanz@vbox:~/study/ueap$ cat temp.out </span><br><span class="line">a write to stdcout</span><br><span class="line">before fork</span><br><span class="line">In Parent process</span><br><span class="line">before fork</span><br><span class="line">In Child process</span><br><span class="line">pid=3095, glob=7, var=1</span><br><span class="line">pid=3094, glob=6, var=80</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><code>before fork</code>被打印了两次，why？<br>因为输出到文件中时，执行的是全缓冲。当执行到printf \n时，并不会flush 缓冲区，而是继续将数据保存再缓冲区中。<br>当fork时，child process也会得到缓冲区的副本，从而会打印两次。<br>而再命令行操作时，执行的时行缓冲，数据再printf \n时，缓冲区就已经被flush了。</p>
+<blockquote>
+<p>|</p>
+<ul>
+<li>全缓冲 指系统再填满标准IO缓冲区之后才进行实际的IO操作。对于驻留再磁盘上的文件来说通常是由标准IO实现的全缓冲</li>
+<li>行缓冲 标准IO再输入和输出中遇到换行符时执行I/O操作。当流涉及到终端时，通常使用的是行缓冲</li>
+<li>无缓冲 标准出错流stderr通常时无缓冲的</li>
+</ul>
+</blockquote>
+<ul>
+<li>文件共享<br>看如下的code，会输出啥？</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mysys.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">write_str</span><span class="params">(<span class="keyword">bool</span> is_child, <span class="keyword">int</span> fd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">char</span> child_buf[] = <span class="string">"I am in child process"</span>;</span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">char</span> parent_buf[] = <span class="string">"I am in parent process"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">char</span>* buf = is_child ? child_buf : parent_buf;</span><br><span class="line">	<span class="keyword">int</span> len = write(fd, buf, <span class="built_in">strlen</span>(buf) - <span class="number">1</span>);</span><br><span class="line">	<span class="keyword">if</span>(len != <span class="built_in">strlen</span>(buf) - <span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(<span class="string">"Failed to write data in child process"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> cur_pos = lseek(fd, <span class="number">0</span>, SEEK_CUR);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Current pos is %d\n"</span>, cur_pos);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> fd = creat(<span class="string">"fork.txt"</span>, FILE_MODE);</span><br><span class="line">	<span class="keyword">if</span>(fd &lt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(<span class="string">"Failed to creat the file fork.txt"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">pid_t</span> child_pid = fork();</span><br><span class="line">	<span class="keyword">if</span>(child_pid &lt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(<span class="string">"failed to fork"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(child_pid == <span class="number">0</span>) <span class="comment">// in child process</span></span><br><span class="line">	&#123;</span><br><span class="line">		write_str(<span class="literal">true</span>, fd);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		sleep(<span class="number">2</span>);</span><br><span class="line">		write_str(<span class="literal">false</span>, fd);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再fork.txt中的内容为：<br><em>I am in child procesI am in parent proces</em><br>可以看到其中的string没有重叠部分，parent process的写入内容在child process之后。这说明了啥？<br>以上说明了parent process与child process共享同一文件偏移量。<br>实际上，fork的一个特性就是parent process的所有打开的file descriptor都会被复制到child process中，等价与执行了dup 函数。<br><img src="https://github.com/longneicool/images/blob/master/Snipaste_2018-10-09_22-43-25.jpg?raw=true" alt=""></p>
+<ul>
+<li>总结<br>fork有以下两种用法：<ol>
+<li>1个parent process希望复制自己，使parent process and child process同时执行不同的代码段。这在网络服务中非常常见，—parent process等待客户端的服务请求，当这种请求到达时，parent process调用fork，使得child process处理此请求。parent process则继续等待下一个服务请求</li>
+<li>一个进程要执行一个不同的程序，在这种情况下，child process从fork返回后，立即调用exec…</li>
+</ol>
+</li>
+</ul>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/APUE/" rel="tag"># APUE</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/29/chap7-process/" rel="next" title="Chap7 进程环境">
+                <i class="fa fa-chevron-left"></i> Chap7 进程环境
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -326,6 +471,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTc0Ni8xNjI3Mw=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -574,6 +728,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
