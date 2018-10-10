@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="12345#include &amp;lt;unistd.h&amp;gt;/* Clone the calling process, creating an exact copy.   Return -1 for errors, 0 to the new process,   and the process ID of the new process to the old process.  */int for">
+<meta name="description" content="8.4 fork12345#include &amp;lt;unistd.h&amp;gt;/* Clone the calling process, creating an exact copy.   Return -1 for errors, 0 to thef new process,   and the process ID of the new process to the old process.">
 <meta name="keywords" content="APUE">
 <meta property="og:type" content="article">
 <meta property="og:title" content="进程控制">
 <meta property="og:url" content="http://yoursite.com/2018/10/09/进程控制/index.html">
 <meta property="og:site_name" content="Longneicool">
-<meta property="og:description" content="12345#include &amp;lt;unistd.h&amp;gt;/* Clone the calling process, creating an exact copy.   Return -1 for errors, 0 to the new process,   and the process ID of the new process to the old process.  */int for">
+<meta property="og:description" content="8.4 fork12345#include &amp;lt;unistd.h&amp;gt;/* Clone the calling process, creating an exact copy.   Return -1 for errors, 0 to thef new process,   and the process ID of the new process to the old process.">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/longneicool/images/blob/master/Snipaste_2018-10-09_22-43-25.jpg?raw=true">
-<meta property="og:updated_time" content="2018-10-09T14:53:27.947Z">
+<meta property="og:updated_time" content="2018-10-10T14:31:44.979Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="进程控制">
-<meta name="twitter:description" content="12345#include &amp;lt;unistd.h&amp;gt;/* Clone the calling process, creating an exact copy.   Return -1 for errors, 0 to the new process,   and the process ID of the new process to the old process.  */int for">
+<meta name="twitter:description" content="8.4 fork12345#include &amp;lt;unistd.h&amp;gt;/* Clone the calling process, creating an exact copy.   Return -1 for errors, 0 to thef new process,   and the process ID of the new process to the old process.">
 <meta name="twitter:image" content="https://github.com/longneicool/images/blob/master/Snipaste_2018-10-09_22-43-25.jpg?raw=true">
 
 
@@ -371,7 +371,7 @@
       
 
       
-        <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="comment">/* Clone the calling process, creating an exact copy.</span></span><br><span class="line"><span class="comment">   Return -1 for errors, 0 to the new process,</span></span><br><span class="line"><span class="comment">   and the process ID of the new process to the old process.  */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fork</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+        <h4 id="8-4-fork"><a href="#8-4-fork" class="headerlink" title="8.4 fork"></a>8.4 fork</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="comment">/* Clone the calling process, creating an exact copy.</span></span><br><span class="line"><span class="comment">   Return -1 for errors, 0 to thef new process,</span></span><br><span class="line"><span class="comment">   and the process ID of the new process to the old process.  */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fork</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
 <p>fork是基于当前的process new1个新的process。fork分别再child process and parent process被调用1次。<br>在child process中，fork返回0。在parent process中，fork返回child process的pid。<br>child process 和 parent process继续执行fork之后的code，child process会获得parent process的数据空间，堆，栈的<strong>副本</strong>。<br><a id="more"></a></p>
 <ul>
 <li>堆，栈，数据空间的副本</li>
@@ -405,6 +405,25 @@
 </ol>
 </li>
 </ul>
+<h4 id="8-5-函数exit"><a href="#8-5-函数exit" class="headerlink" title="8.5 函数exit"></a>8.5 函数exit</h4><p>本节主要介绍再进程退出时父进程与子进程的关系。<br>进程有5种正常和3种异常终止方式，5种正常终止方式有：</p>
+<ol>
+<li>在main中return 2. 调用exit 3. 调用_exit 4. 进程的最后1个线程再其启动例程中执行return语句。但是该线程的返回值不作为进程的返回值。此时进程的终止状态为0 5. 进程的最后1个线程调用pthread_exit，但是进程的终止状态依然为0.</li>
+<li>异常终止状态有：1) 调用abort 2) 进程收到某些信息 3) 最后一个线程对cancellation请求作出响应。</li>
+</ol>
+<p>无论对于那一种退出方式，我们都希望<strong>终止进程能够通知其父进程它是如何终止的</strong><br>对于正常终止来说，终止进程将其exit status作为参数传到exit或_exit函数中，然后再转换为<strong>termination status</strong><br>对于异常终止来说，内核会产生一个指示其异常终止原因的<strong>termination status</strong>。<br>无论以上那种情况，该终止进程的父进程都能用wait或waitpid函数取得其终止状态。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Wait for a child to die.  When one does, put its status in *STAT_LOC</span></span><br><span class="line"><span class="comment">   and return its process ID.  For errors, return (pid_t) -1.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   This function is a cancellation point and therefore not marked with</span></span><br><span class="line"><span class="comment">   __THROW.  */</span></span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">__pid_t</span> wait (<span class="keyword">int</span> *__stat_loc);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mysys.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">pr_exit</span><span class="params">(<span class="keyword">int</span> status)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(WIFEXITED(status))</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"normal termination, exit status = %d\n"</span>, WEXITSTATUS(status));</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(WIFSIGNALED(status))</span><br><span class="line">	    <span class="built_in">printf</span>(<span class="string">"abnormal termination, signal number = %d%s\n"</span>, WTERMSIG(status),</span><br><span class="line">#ifdef WCOREDUMP</span><br><span class="line">	    		WCOREDUMP(status) ? <span class="string">"(core file generated)"</span> : <span class="string">""</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(WIFSTOPPED(status))</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"child stopped, signal number = %d\n"</span>, WSTOPSIG(status));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">pid_t</span> child = fork();</span><br><span class="line">	<span class="keyword">if</span>(child &lt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(<span class="string">"fork failed"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(child == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">int</span> a = <span class="number">1</span> / <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> status;</span><br><span class="line">	<span class="keyword">pid_t</span> p = wait(&amp;status);</span><br><span class="line">	pr_exit(status);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出为： <em>abnormal termination, signal number = 8(core file generated)</em></p>
+<p>下面我们就讨论子进程与父进程的终止关系</p>
+<ol>
+<li>子进程在父进程之前终止<br> 1) 如果是正常终止，则将其exit status作为参数传递给exit函数<br> 2) 如果是异常终止，内核会为每个终止的紫禁城保存一定量的信息，父进程可以同感wait函数调用</li>
+<li>父进程再子进程之前终止<br>对于父进程已经终止的所有进程，他们的父进程都改变为init进程，即这些进程被init进程收养。其大概操作步骤是：<br>当一个进程终止时，内核会检查其是否还有子进程，如果有，则将这些子进程的父进程全部改为init进程，从而保证每个进程有1个父进程。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mysys.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">pid_t</span> child = fork();</span><br><span class="line">	<span class="keyword">if</span>(child &lt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(<span class="string">"Failed to fork"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(child == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">int</span> n = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">while</span>(n &lt; <span class="number">100</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			sleep(<span class="number">1</span>);</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"ppid:%d\n"</span>, getppid());</span><br><span class="line">			n++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		sleep(<span class="number">2</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>以上程序的输出是<br>ppid:2688<br>ppid:1<br>ppid:1<br>ppid:1<br>ppid:1<br>ppid:1<br>ppid:1<br>ppid:1<br>ppid:1<br>ppid:1</p>
+<p>如上可见，在2s后，父进程退出后，child进程的父进程会改为init进程(pid为1).<br><strong>zombie进程</strong> – 对于一个已经终止，但是其父进程尚未对其进行善后处理（获取终止子进程的有关信息，释放它仍占用的资源）的进程成为zombie进程。</p>
+<ol start="3">
+<li>由init进程收养的进程终止时，会不会变成zombie 进程？<br>不会。init会在它的每个子进程终止时调用wait函数取得其终止状态，这样就防止了再系统中塞满zombie进程。</li>
+</ol>
 
       
     </div>
@@ -500,8 +519,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -552,6 +580,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#8-4-fork"><span class="nav-text">8.4 fork</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-5-函数exit"><span class="nav-text">8.5 函数exit</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
