@@ -296,6 +296,270 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/06/线程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Longneicool">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Longneicool">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/06/线程/" itemprop="url">线程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-06T21:39:55+08:00">
+                2018-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>线程的标识也就是线程id,即pthread_t.<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="comment">/* Obtain the identifier of the current thread.  */</span></span><br><span class="line">extern pthread_t pthread_self (void) __THROW __attribute__ ((__const__));</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Compare two thread identifiers.  */</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">pthread_equal</span> <span class="params">(<span class="keyword">pthread_t</span> __thread1, <span class="keyword">pthread_t</span> __thread2)</span></span></span><br><span class="line">  __THROW __attribute__ ((__const__));</span><br></pre></td></tr></table></figure></p>
+<p>线程的创建是通过pthread_create来完成</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Create a new thread, starting with execution of START-ROUTINE</span></span><br><span class="line"><span class="comment">   getting passed ARG.  Creation attributed come from ATTR.  The new</span></span><br><span class="line"><span class="comment">   handle is stored in *NEWTHREAD.  0 - success， 否则返回error code*/</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">pthread_create</span> <span class="params">(<span class="keyword">pthread_t</span> *__restrict __newthread,</span></span></span><br><span class="line"><span class="function"><span class="params">			   <span class="keyword">const</span> <span class="keyword">pthread_attr_t</span> *__restrict __attr,</span></span></span><br><span class="line">			   void *(*__start_routine) (void *),</span><br><span class="line">			   <span class="keyword">void</span> *__restrict __arg) __THROWNL __nonnull ((<span class="number">1</span>, <span class="number">3</span>));</span><br></pre></td></tr></table></figure>
+<p>新创建的线程是从<strong>start_routine开始run的，</strong>arg是该函数的参数. pthread_create的用法比较简单，但是需要注意：</p>
+<ol>
+<li>线程创建时 新线程与调用线程的运行顺序不确定</li>
+<li>pthread_create函数在调用失败时会返回错误码，但不会像其他PISIX函数设置errno，每个线程都有errno副本。</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mysys.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print_ids</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">pid_t</span> pid = getpid();</span><br><span class="line">	<span class="keyword">pthread_t</span> tid = pthread_self();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"pid %lu tid 0x%lx\n"</span>, pid, tid);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">start_run</span><span class="params">(<span class="keyword">void</span>* param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	print_ids();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> (<span class="keyword">void</span>*)<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">pthread_t</span> tid = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> res = pthread_create(&amp;tid, <span class="literal">nullptr</span>, start_run, <span class="literal">nullptr</span>);</span><br><span class="line">	<span class="keyword">if</span>(res &lt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(<span class="string">"failed to create pthread"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	sleep(<span class="number">1</span>);</span><br><span class="line">	print_ids();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果把上述的code改为</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"apue.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mysys.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print_ids</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">pid_t</span> pid = getpid();</span><br><span class="line">	<span class="keyword">pthread_t</span> tid = pthread_self();</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"pid %lu tid 0x%lx\n"</span>, pid, tid);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">start_run</span><span class="params">(<span class="keyword">void</span>* param)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 这里的tid不一定为新线程的id，因为新线程与调用线程的运行顺序不一致。</span></span><br><span class="line">	<span class="comment">// 如果新线程先运行，调用线程后给tid赋值，则此处的tid为0.</span></span><br><span class="line">	<span class="comment">// 也就是多线程要考虑race condition</span></span><br><span class="line">	<span class="keyword">pthread_t</span> tid = *((<span class="keyword">pthread_t</span>*)param);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"tid is %ld\n"</span>, tid);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> (<span class="keyword">void</span>*)<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">pthread_t</span> tid = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> res = pthread_create(&amp;tid, <span class="literal">nullptr</span>, start_run, (<span class="keyword">void</span>*)&amp;tid);</span><br><span class="line">	<span class="keyword">if</span>(res &lt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		err_sys(<span class="string">"failed to create pthread"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/30/ShareMemory/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Longneicool">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Longneicool">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/30/ShareMemory/" itemprop="url">ShareMemory</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-30T10:59:57+08:00">
+                2018-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Identifiers-and-Keys"><a href="#Identifiers-and-Keys" class="headerlink" title="Identifiers and Keys"></a>Identifiers and Keys</h3><p>Identifiers: Each IPC structure(message queue, semaphore, or share memory segment) is referred to by a non-negative integer identifier. 主要用于send/fetch the content from the IPC structure.<br>需要注意The identifier is an <strong>internal</strong> name for an IPC object. 在Cooperating processes之间，就需要an external namin scheme, 也就是key。</p>
+<p>在创建IPC structure时，需要指定key，比如<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">shmget</span> <span class="params">(<span class="keyword">key_t</span> __key, <span class="keyword">size_t</span> __size, <span class="keyword">int</span> __shmflg)</span> __THROW</span>;</span><br></pre></td></tr></table></figure></p>
+<p>那么怎么来获取key呢？</p>
+<ol>
+<li><p>The server can create a new IPC structure by specifying a key of IPC_PRIVATE and store the returned identifier somewhere(such as a file ) for the client to obtain.<br>注意通过key IPC_PRIVATE 只能用于create a new IPC structure, 后续无法通过这个key来access IPC structure.<br>IPC_PRIVATE key 也用在parent-child relationship. 在parent中create IPC structure, 这个Identifier is available in child process after fork(). 在child process会获取parent data的副本</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/shm.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/ipc.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> ** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> id = shmget(IPC_PRIVATE, <span class="number">1024</span>, IPC_CREAT | IPC_EXCL | <span class="number">0666</span>);</span><br><span class="line">	<span class="keyword">pid_t</span> child = fork();</span><br><span class="line">	<span class="keyword">if</span>(child == <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"id in child is "</span> &lt;&lt; id &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"id in parent is "</span> &lt;&lt; id &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>The client and the server can agree on a key by defining the key in a common header</p>
+</li>
+<li>ftok<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/ipc.h&gt; </span></span></span><br><span class="line"><span class="keyword">key_t</span> ftok(<span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">int</span> id);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/15/Shell/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -920,7 +1184,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
